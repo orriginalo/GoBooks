@@ -29,7 +29,7 @@ http://localhost:8080/api/books
 ```
 
 ## ⚙️ Технологии
-- Backend: Go 1.21 + Echo framework
+- Backend: Go 1.24 + Echo framework
 - Database: PostgreSQL
 - Frontend: Vanilla JS + HTML
 - Контейнеризация: Docker
