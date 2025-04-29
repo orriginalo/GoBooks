@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"gorm.io/driver/postgres"
@@ -14,7 +13,7 @@ import (
 
 var db *gorm.DB
 
-const DB_HOST = "localhost" // "db" - если запущено в Docker-контейнере
+const DB_HOST = "db" // "db" - если запущено в Docker-контейнере
 const DB_USERNAME = "postgres"
 const DB_PASSWORD = "postgres"
 const DB_NAME = "postgres"
@@ -35,7 +34,7 @@ func initDB() {
 }
 
 type Book struct {
-	ID     string `gorm:"primaryKey" json:"id"`
+	ID     uint   `gorm:"primaryKey;autoIncrement" json:"id"`
 	Title  string `json:"title"`
 	Author string `json:"author"`
 	Year   int    `json:"year"`
@@ -78,7 +77,6 @@ func addBook(c echo.Context) error {
 	}
 
 	book := Book{
-		ID:     uuid.New().String(),
 		Title:  newBook.Title,
 		Author: newBook.Author,
 		Year:   newBook.Year,
@@ -97,10 +95,13 @@ func main() {
 	e := echo.New()
 
 	// Настройки CORS с явным разрешением всех методов
-	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
-		AllowOrigins: []string{"*"}, // Разрешить все домены (для разработки)
-		AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodOptions},
-	}))
+	// e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	// 	AllowOrigins: []string{"*"}, // Разрешить все домены (для разработки)
+	// 	AllowMethods: []string{http.MethodGet, http.MethodPost, http.MethodDelete, http.MethodOptions},
+	// }))
+
+	e.Use(middleware.CORS())
+	e.Use(middleware.Logger())
 
 	e.GET("/api/books", getBooks)
 	e.POST("/api/books", addBook)
