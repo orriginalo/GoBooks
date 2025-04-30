@@ -1,4 +1,4 @@
-module my_crud
+module gobooks
 
 go 1.24.1
 
